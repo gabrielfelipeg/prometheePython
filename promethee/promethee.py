@@ -5,9 +5,9 @@ from preference_functions import PreferenceFunctions
 class Promethee:
 	# defines the promethee class that we will use to run simulation
 	# evalutionTable (array): table of evaluation of the alternatives w.r.t criteria
-	# weights (vector): weights for the criteria
+	# weights (vector): weights for the criteriacasa
 	# preference function : list of preference function given (string)
-	def __init__(self,evaluationTable,weights, preference_function, function_params):
+	def __init__(self, evaluationTable, weights, preference_function, function_params):
 		assert(len(weights)==len(evaluationTable[0]));
 		self.evaluationTable = evaluationTable;
 		self.numberAlternatives = len(evaluationTable);
