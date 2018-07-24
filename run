@@ -1,0 +1,11 @@
+#!/bin/bash
+
+#run the promethee implementation and times its execution
+
+number_of_alternative=$1
+number_of_criteria=$2
+
+#the output of the analysis
+output_file="output.csv"
+
+time python promethee/simulation.py $number_of_alternative $number_of_criteria $output_file
