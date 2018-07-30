@@ -138,8 +138,8 @@ class Promethee:
 		return self.positive_matrix;
 	def getNegativeMatrix(self):
 		return self.negative_matrix;
-	def getPairwiseComparisonMatrix(self):
-		return self.pi;
+	#def getPairwiseComparisonMatrix(self):
+	#	return self.pi;
 	def getGlobalFlow(self):
 		return self.phi_global;
 
