@@ -37,13 +37,13 @@ def run():
 
 	input_weight = [3.1, 3.5]
  
-	input_preference = ['usual', 'usual']
+	input_preference = ['linear', 'linear']
 
-	input_param = {'p': 0, 'q': 0, 'sigma': 0}
+	input_param = {'p': 1, 'q': 0, 'sigma': 0}
 
 	algorithmPromethee = Promethee(input_mat, input_weight, input_preference, input_param)
 
-	output = algorithmPromethee.phi_plus
+	output = algorithmPromethee.getPlusFlow()
 
 	for i in xrange(rows):
 		for j in xrange(coluns):
