@@ -45,9 +45,9 @@ class Promethee:
 					deltaAB = self.evaluationTable[a][k] - self.evaluationTable[b][k]
 					deltaBA = deltaAB * -1
 					self.phi_plus[a] += self.weights[k] * self.shapeFunction[k](deltaAB)
-					self.phi_plus[b] -= self.weights[k] * self.shapeFunction[k](deltaAB)
-					self.phi_minus[a] -= self.weights[k] * self.shapeFunction[k](deltaBA) 
 					self.phi_plus[b] += self.weights[k] * self.shapeFunction[k](deltaBA)
+					self.phi_minus[b] -= self.weights[k] * self.shapeFunction[k](deltaAB)
+					self.phi_minus[a] -= self.weights[k] * self.shapeFunction[k](deltaBA) 
 
 		for i in xrange(self.numberAlternatives):
 			self.phi_plus[i] /= self.numberCriteria
