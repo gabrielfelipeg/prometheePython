@@ -58,10 +58,8 @@ class PreferenceFunctions:
 			output = 0.0
 		elif (delta < self.p):
 			output = delta/self.p
-		elif (delta > self.p):
+		elif (delta >= self.p):
 			output = 1.0
-		else:
-			output = (delta)
 
 		return output
 	

@@ -1,5 +1,6 @@
 # coding=utf-8
 import utils
+from threading import Thread
 from preference_functions import PreferenceFunctions 
 
 class Promethee:
@@ -36,18 +37,36 @@ class Promethee:
 	def computeFlows(self):
 		self.phi_plus = [0] * self.numberAlternatives
 		self.phi_minus = [0] * self.numberAlternatives
-		self.phi_global = [0] * self.numberAlternatives
+		self.phi_global = [0] * self.numberAlternatives 
 
-		for a in xrange(self.numberAlternatives):
-			for b in xrange(a + 1, self.numberAlternatives):
-				sum = 0
-				for k in xrange(self.numberCriteria):
-					deltaAB = self.evaluationTable[a][k] - self.evaluationTable[b][k]
-					deltaBA = deltaAB * -1
-					self.phi_plus[a] += self.weights[k] * self.shapeFunction[k](deltaAB)
-					self.phi_plus[b] += self.weights[k] * self.shapeFunction[k](deltaBA)
-					self.phi_minus[b] -= self.weights[k] * self.shapeFunction[k](deltaAB)
-					self.phi_minus[a] -= self.weights[k] * self.shapeFunction[k](deltaBA) 
+		parameter = {
+			'criteria' : self.numberCriteria,
+			'table' : self.evaluationTable,
+			'weight': self.weights,
+			'function': self.shapeFunction
+		}
+
+		nA = self.numberAlternatives
+
+		rangeIJ = [
+			{'beginI' : 0, 'beginJ': 0, 'endI': nA/2, 'endJ': nA/2 },
+			{'beginI' : 0, 'beginJ': nA/2, 'endI': nA/2, 'endJ': nA},
+			{'beginI' : nA/2, 'beginJ': 0, 'endI': nA, 'endJ': nA/2},
+			{'beginI' : nA/2, 'beginJ': nA/2, 'endI': nA, 'endJ': nA}
+		]
+
+		threads = [
+			FlowCalculator(self.phi_plus, self.phi_minus, parameter, rangeIJ[0]),
+			FlowCalculator(self.phi_plus, self.phi_minus, parameter, rangeIJ[1]),
+			FlowCalculator(self.phi_plus, self.phi_minus, parameter, rangeIJ[2]),
+			FlowCalculator(self.phi_plus, self.phi_minus, parameter, rangeIJ[3])			
+		]
+
+		for thread in threads:
+			thread.start()
+
+		for thread in threads:
+			thread.join()
 
 		for i in xrange(self.numberAlternatives):
 			self.phi_plus[i] /= self.numberCriteria
@@ -62,4 +81,29 @@ class Promethee:
 
 	def getMinusFlow(self):
 		return self.phi_minus
+	
+class FlowCalculator(Thread):
+
+	def __init__(self, phi_plus, phi_minus, parameter, range):
 		
+		self.phi_plus = phi_plus
+		self.phi_minus = phi_minus
+		self.numberCriteria = parameter['criteria']
+		self.weights = parameter['weight']
+		self.shapeFunction = parameter['function']
+		self.evaluationTable = parameter['table']
+		self.beginI = range['beginI']
+		self.beginJ = range['beginJ']
+		self.endI = range['endI']
+		self.endJ = range['endJ']
+
+		Thread.__init__(self)
+
+	def run(self):
+		for a in xrange(self.beginI, self.endI):
+			for b in xrange(self.beginJ, self.endJ):
+				for k in xrange(self.numberCriteria):
+					if a == b: continue
+					deltaAB = self.evaluationTable[a][k] - self.evaluationTable[b][k]
+					self.phi_plus[a] += self.weights[k] * self.shapeFunction[k](deltaAB)
+					self.phi_minus[b] -= self.weights[k] * self.shapeFunction[k](deltaAB)
