@@ -53,7 +53,8 @@ class PreferenceFunctions:
 		return int(delta > 0)
 
 	def linear_function(self, delta):
-
+		output = 0.0
+		
 		if (delta < 0):
 			output = 0.0
 		elif (delta < self.p):

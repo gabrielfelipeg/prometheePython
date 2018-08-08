@@ -7,15 +7,15 @@ from preference_functions import generate_preference_function_parameters
 def run():
 
 
-	rows = 408
-	coluns = 470
+	rows = 404
+	coluns = 466
 
 	n_criteria = 2
 	n_alternatives = rows * coluns
 	
 	input_mat = utils.initialise_matrix(n_criteria, n_alternatives)
 	
-	with open('IMD-I/VPR10', 'rb') as f:
+	with open('IMD-I/VPR10_nmim_null_WGS_CONVERTED.txt', 'rb') as f:
 		i = 0
 		for line in f:
 			numbers = map(float, line.split(' '))
@@ -25,7 +25,7 @@ def run():
 				j += 1
 			i += 1
 
-	with open('IMD-I/VVAAmm', 'rb') as f:
+	with open('IMD-I/VVAAmm_nmin_null_WGS_CONVERTED.txt', 'rb') as f:
 		i = 0
 		for line in f:
 			numbers = map(float, line.split(' '))
@@ -35,7 +35,7 @@ def run():
 				j += 1
 			i += 1
 
-	input_weight = [3.1, 3.5]
+	input_weight = [0.470, 0.530]
  
 	input_preference = ['linear', 'linear']
 

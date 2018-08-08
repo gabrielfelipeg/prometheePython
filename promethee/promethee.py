@@ -1,5 +1,6 @@
 # coding=utf-8
 import utils
+import math
 from threading import Thread
 from preference_functions import PreferenceFunctions 
 
@@ -103,7 +104,17 @@ class FlowCalculator(Thread):
 		for a in xrange(self.beginI, self.endI):
 			for b in xrange(self.beginJ, self.endJ):
 				for k in xrange(self.numberCriteria):
-					if a == b: continue
+					if a == b: 
+						continue
+					
+					if math.isnan(self.phi_minus[a]) or self.evaluationTable[a][k] == -1:
+						self.phi_plus[a] = float('nan')
+						continue
+
+					if math.isnan(self.phi_minus[b]) or self.evaluationTable[b][k] == -1:
+						self.phi_minus[b] = float('nan')
+						continue
+
 					deltaAB = self.evaluationTable[a][k] - self.evaluationTable[b][k]
 					self.phi_plus[a] += self.weights[k] * self.shapeFunction[k](deltaAB)
 					self.phi_minus[b] -= self.weights[k] * self.shapeFunction[k](deltaAB)
